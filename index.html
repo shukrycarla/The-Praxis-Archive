@@ -31,8 +31,8 @@
      - category  → must be exactly one of:
                      "Autoimmune Conditions"
                      "Neurology"
-                     "Psychology"
                      "Immunology"
+                     "Psychology"
                      "General Medicine"
                    (this controls which tab and badge color it appears under)
      - title     → the full title of your paper
@@ -45,6 +45,18 @@
      - pdfUrl    → 🔗 the path or link to your PDF file. Examples:
                      "papers/my-paper.pdf"                (a file next to this HTML file)
                      "https://drive.google.com/your-link"  (an external hosted link)
+     - pinned    → true or false (no quotes). Set to true to pin a paper to
+                   the very top of the list, above everything else — handy
+                   for an "Introduction to…" or overview paper you want
+                   readers to see first. Leave as false for normal papers.
+
+     REORDERING PAPERS:
+     Papers display in the same order they appear in this array — top of
+     the array = top of the page. To reorder, just cut and paste a whole
+     paper's { ... } block to a different position in the list. Any paper
+     with pinned: true always floats above all non-pinned papers, no
+     matter where it sits in the array; if more than one paper is pinned,
+     they keep their relative order among themselves.
      ===================================================================== -->
 <script>
   const RESEARCH_PAPERS = [
@@ -53,13 +65,14 @@
 
     {
       id: 1,
-      category: "Autoimmune Conditions",         // "Autoimmune Conditions" | "Neurology" | "Psychology" | "Immunology" | "General Medicine"
+      category: "Autoimmune Conditions",         // "Autoimmune Conditions" | "Neurology" | "Immunology" | "Psychology" | "General Medicine"
       title: "Your Paper Title Goes Here",
       date: "Month Year",
       author: "",
       abstract: "Write a 2–3 sentence summary of your paper here.",
       tags: ["keyword-one", "keyword-two", "keyword-three"],
-      pdfUrl: "papers/your-file-name.pdf"          // 🔗 replace with your real PDF path or link
+      pdfUrl: "papers/your-file-name.pdf",         // 🔗 replace with your real PDF path or link
+      pinned: false                                // set to true to pin this paper to the top
     },
 
     ---------------------------------------------------------------------- */
@@ -97,10 +110,10 @@
     --cat-neurology-fg:    #2F4C82;
     --cat-general-bg:      #EAF6F0;
     --cat-general-fg:      #2E7D53;
-    --cat-psychology-bg:   #F3EEFC;
-    --cat-psychology-fg:   #6B46B8;
     --cat-immunology-bg:   #E8F6F6;
     --cat-immunology-fg:   #147A78;
+    --cat-psychology-bg:   #F3EEFC;
+    --cat-psychology-fg:   #6B46B8;
 
     /* Type scale */
     --font-display: 'Source Serif 4', Georgia, serif;
@@ -458,6 +471,24 @@
   }
   .modal-body textarea{ resize: vertical; font-family: var(--font-body); }
 
+  .modal-body label.checkbox-label{
+    display:flex;
+    align-items:flex-start;
+    gap: 9px;
+    font-weight: 500;
+    background: var(--color-bg);
+    border: 1.5px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    padding: 11px 12px;
+  }
+  .modal-body label.checkbox-label input[type="checkbox"]{
+    width: 16px;
+    height: 16px;
+    margin-top: 2px;
+    accent-color: var(--color-indigo);
+    flex-shrink: 0;
+  }
+
   .field-error{
     display:none;
     color: #B34B32;
@@ -552,12 +583,35 @@
     flex-direction:column;
     box-shadow: var(--shadow-card);
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    position: relative;
   }
   .paper-card:hover{
     transform: translateY(-3px);
     box-shadow: var(--shadow-card-hover);
     border-color: var(--color-border-strong);
   }
+  .paper-card--pinned{
+    border-color: #D6C9A8;
+    background: linear-gradient(180deg, #FFFDF8 0%, var(--color-surface) 70px);
+  }
+  .pin-flag{
+    position:absolute;
+    top: -10px;
+    left: 20px;
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    background: #B8863B;
+    color: #fff;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border-radius: 100px;
+    box-shadow: 0 2px 6px rgba(184,134,59,0.35);
+  }
+  .pin-flag svg{ width:10px; height:10px; }
 
   .card-top-row{
     display:flex;
@@ -578,8 +632,8 @@
   .badge-autoimmune{ background: var(--cat-autoimmune-bg); color: var(--cat-autoimmune-fg); }
   .badge-neurology{  background: var(--cat-neurology-bg);  color: var(--cat-neurology-fg); }
   .badge-general{    background: var(--cat-general-bg);    color: var(--cat-general-fg); }
-  .badge-psychology{ background: var(--cat-psychology-bg); color: var(--cat-psychology-fg); }
   .badge-immunology{ background: var(--cat-immunology-bg); color: var(--cat-immunology-fg); }
+  .badge-psychology{ background: var(--cat-psychology-bg); color: var(--cat-psychology-fg); }
 
   .card-date{
     font-family: var(--font-mono);
@@ -718,8 +772,7 @@
       <span class="hero-eyebrow"><span class="dot"></span>Independent Research Archive</span>
       <h1 class="hero-title">Where theory<br><em>meets practice.</em></h1>
       <p class="hero-sub">
-        A working library of independent research spanning autoimmune conditions, neurology, psychology,
-        immunology, and general medicine — each paper offered for scrutiny, debate, and further inquiry.
+        A living archive of independent research in autoimmune conditions, neurology, psychology, immunology, and general medicine.
       </p>
     </div>
   </section>
@@ -793,8 +846,8 @@
           <select id="fCategory">
             <option value="Autoimmune Conditions">Autoimmune Conditions</option>
             <option value="Neurology">Neurology</option>
-            <option value="Psychology">Psychology</option>
             <option value="Immunology">Immunology</option>
+            <option value="Psychology">Psychology</option>
             <option value="General Medicine">General Medicine</option>
           </select>
         </label>
@@ -812,6 +865,10 @@
         </label>
         <label>PDF file path or link
           <input type="text" id="fPdf" placeholder="papers/my-paper.pdf  or  https://drive.google.com/...">
+        </label>
+        <label class="checkbox-label">
+          <input type="checkbox" id="fPinned">
+          Pin to top <span class="hint">— keeps this paper above all others, e.g. an "Introduction to…" paper</span>
         </label>
         <p class="field-error" id="formError">Please fill in at least the title and abstract before generating.</p>
         <button class="generate-btn" id="generateCodeBtn" type="button">Generate code →</button>
@@ -839,14 +896,14 @@
      (RESEARCH_PAPERS itself lives in the editable block at the very top
      of this file, inside <head>.)
      ===================================================================== */
-  const CATEGORIES = ["All", "Autoimmune Conditions", "Neurology", "Psychology", "Immunology", "General Medicine"];
+  const CATEGORIES = ["All", "Autoimmune Conditions", "Neurology", "Immunology", "Psychology", "General Medicine"];
 
   /* Maps a category name to its badge CSS class + short label used in the UI */
   const CATEGORY_STYLE = {
     "Autoimmune Conditions": { badgeClass: "badge-autoimmune" },
     "Neurology":             { badgeClass: "badge-neurology" },
-    "Psychology":            { badgeClass: "badge-psychology" },
     "Immunology":            { badgeClass: "badge-immunology" },
+    "Psychology":            { badgeClass: "badge-psychology" },
     "General Medicine":      { badgeClass: "badge-general" }
   };
 
@@ -884,7 +941,7 @@
   function getFilteredPapers(){
     const q = searchQuery.trim().toLowerCase();
 
-    return RESEARCH_PAPERS.filter(paper => {
+    const filtered = RESEARCH_PAPERS.filter(paper => {
       const matchesCategory = activeCategory === "All" || paper.category === activeCategory;
       if (!matchesCategory) return false;
 
@@ -897,6 +954,11 @@
 
       return haystack.includes(q);
     });
+
+    // Pinned papers float to the top, above everything else. Array.sort is
+    // stable in modern browsers, so papers within each group (pinned /
+    // not pinned) keep the relative order they already had.
+    return filtered.sort((a, b) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0));
   }
 
   /* =====================================================================
@@ -955,7 +1017,14 @@
         .join("");
 
       return `
-        <article class="paper-card">
+        <article class="paper-card${paper.pinned ? " paper-card--pinned" : ""}">
+          ${paper.pinned ? `
+          <span class="pin-flag">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M12 2l2.5 6.5L21 10l-5 4.5L17.5 22 12 18l-5.5 4L8 14.5 3 10l6.5-1.5L12 2z" fill="currentColor"/>
+            </svg>
+            Pinned
+          </span>` : ""}
           <div class="card-top-row">
             <span class="badge ${style.badgeClass}">${escapeHtml(paper.category)}</span>
             <span class="card-date">${escapeHtml(paper.date)}</span>
@@ -1051,6 +1120,7 @@
     const abstract = document.getElementById("fAbstract").value;
     const tagsRaw  = document.getElementById("fTags").value;
     const pdfUrl   = document.getElementById("fPdf").value;
+    const pinned   = document.getElementById("fPinned").checked;
 
     if (!title.trim() || !abstract.trim()){
       formError.classList.add("visible");
@@ -1079,7 +1149,8 @@
   author: ${toJsString(author)},
   abstract: ${toJsString(abstract)},
   tags: ${tagsJs},
-  pdfUrl: ${toJsString(pdfUrl || "papers/your-file-name.pdf")}
+  pdfUrl: ${toJsString(pdfUrl || "papers/your-file-name.pdf")},
+  pinned: ${pinned}
 },`;
 
     generatedCode.value = code;
